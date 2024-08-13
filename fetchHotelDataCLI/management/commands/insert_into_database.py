@@ -48,8 +48,8 @@ class Command(BaseCommand):
                     self.stdout.write(self.style.WARNING(f'No images found or invalid format for {hotel.title}.'))
 
     def save_image(self, hotel, image_path):
-        base_image_dir = settings.BASE_IMAGE_DIR
-        full_image_path = os.path.join(base_image_dir, image_path.replace(" ","_"))
+        scrapy_image_dir = settings.SCRAPY_IMAGE_DIR
+        full_image_path = os.path.join(scrapy_image_dir, image_path.replace(" ","_"))
         try:
             if not os.path.isfile(full_image_path):
                 self.stderr.write(self.style.ERROR(f'Image not found: {full_image_path}'))
