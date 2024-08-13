@@ -4,7 +4,6 @@ from django.core.management.base import BaseCommand
 from fetchHotelDataCLI.models import Listing
 from hotels.models import Hotel, Image
 from django.conf import settings
-from django.db import transaction
 import uuid
 
 def hotel_image_file_path(instance, filename):
@@ -14,7 +13,7 @@ def hotel_image_file_path(instance, filename):
     return os.path.join('images', filename)
 
 class Command(BaseCommand):
-    help = 'Import hotels from scrapdb to the default database and move images to media folder'
+    help = 'Insert images for an existing hotel based on the title from scrapdb'
 
     def handle(self, *args, **kwargs):
         listings = Listing.objects.using('scrapdb').all()
@@ -24,34 +23,26 @@ class Command(BaseCommand):
             return
 
         for listing in listings:
-            with transaction.atomic():
-                # Check if a hotel with the same title already exists
-                existing_hotel = Hotel.objects.filter(title=listing.title).first()
+            # Check if a hotel with the same title exists
+            hotel = Hotel.objects.filter(title=listing.title).first()
 
-                if existing_hotel:
-                    self.stdout.write(self.style.WARNING(f"Hotel with title '{listing.title}' already exists. Skipping..."))
-                    continue
+            if not hotel:
+                self.stdout.write(self.style.WARNING(f"Hotel with title '{listing.title}' does not exist. Skipping..."))
+                continue
 
-                # Create a new hotel in the default database
-                hotel = Hotel.objects.create(
-                    title=listing.title,
-                    description=f'Imported from scrapdb: {listing.title}',
-                    create_date=listing.create_date,
-                    update_date=listing.update_date,
-                )
-                self.stdout.write(self.style.SUCCESS(f'Created Hotel: {hotel.title}'))
-
-                if isinstance(listing.images, list):
-                    for image_path in listing.images:
-                        self.save_image(hotel, image_path)
-                else:
-                    self.stdout.write(self.style.WARNING(f'No images found or invalid format for {hotel.title}.'))
+            # Insert images for the existing hotel
+            if isinstance(listing.images, list):
+                for image_path in listing.images:
+                    self.save_image(hotel, image_path)
+            else:
+                self.stdout.write(self.style.WARNING(f'No images found or invalid format for {hotel.title}.'))
 
     def save_image(self, hotel, image_path):
         base_image_dir = settings.BASE_IMAGE_DIR
-        full_image_path = os.path.join(base_image_dir, image_path.replace(" ","_"))
+        full_image_path = os.path.join(base_image_dir, image_path)
+
         try:
-            if not os.path.isfile(full_image_path):
+            if not os.path.exists(full_image_path):
                 self.stderr.write(self.style.ERROR(f'Image not found: {full_image_path}'))
                 return
 

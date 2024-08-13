@@ -4,7 +4,7 @@ from django.core.management.base import CommandError
 class Command(BaseCommand):
     help = 'Fetch data from external sources'
 
-    available_subcommands = ['insert_into_database','list_all_titles', 'fetch_images', 'fetch_locations']  # Add your subcommands here
+    available_subcommands = ['insert_into_database', 'insert_only_images','view_all_hotels']  # Add your subcommands here
 
     def add_arguments(self, parser):
         # This adds subcommands as arguments
