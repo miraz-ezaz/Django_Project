@@ -97,7 +97,7 @@ DATABASES = {
 }
 
 # Base directory for images
-BASE_IMAGE_DIR = config('BASE_IMAGE_DIR')
+SCRAPY_IMAGE_DIR = config('SCRAPY_IMAGE_DIR')
 
 
 # Password validation
