@@ -36,8 +36,6 @@ class Command(BaseCommand):
                 hotel = Hotel.objects.create(
                     title=listing.title,
                     description=f'Imported from scrapdb: {listing.title}',
-                    create_date=listing.create_date,
-                    update_date=listing.update_date,
                 )
                 self.stdout.write(self.style.SUCCESS(f'Created Hotel: {hotel.title}'))
 
