@@ -35,7 +35,7 @@ class Command(BaseCommand):
                 # Create a new hotel in the default database
                 hotel = Hotel.objects.create(
                     title=listing.title,
-                    description=f'Imported from scrapdb: {listing.title}',
+                    description=f'Hotel {listing.title}. It is located at {listing.location}. It is Rated {listing.rating}/5'
                 )
                 self.stdout.write(self.style.SUCCESS(f'Created Hotel: {hotel.title}'))
 
