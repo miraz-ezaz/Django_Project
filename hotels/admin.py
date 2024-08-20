@@ -20,7 +20,7 @@ class ImageInline(admin.TabularInline):
 
 class HotelAdmin(admin.ModelAdmin):
     inlines = [ImageInline]
-    list_display = ['title', 'property_id']
+    list_display = ['title', 'property_id','update_date']
     search_fields = ['title', 'description', 'amenities__name']
     list_filter = ['amenities']
 
