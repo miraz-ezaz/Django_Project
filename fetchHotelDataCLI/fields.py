@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class ImageListField(models.JSONField):
     description = "Stores a list of image paths"
 
@@ -18,4 +19,5 @@ class ImageListField(models.JSONField):
     def get_prep_value(self, value):
         if not isinstance(value, list):
             raise ValueError('This field requires a list.')
-        return super().get_prep_value(value)  # Ensure it's properly serialized as JSON for the database
+        # Ensure it's properly serialized as JSON for the database
+        return super().get_prep_value(value)

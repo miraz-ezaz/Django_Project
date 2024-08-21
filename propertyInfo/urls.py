@@ -18,7 +18,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-from django.shortcuts import redirect
 from django.http import HttpResponse
 
 urlpatterns = [
@@ -32,9 +31,9 @@ urlpatterns = [
                 <p>This is the home page.</p>
             </body>
         </html>
-    """, content_type="text/html"), name='home'),  
+    """, content_type="text/html"), name='home'),
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)
